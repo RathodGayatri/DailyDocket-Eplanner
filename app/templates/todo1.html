@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>TO-DO List</title>
+    <style>
+    
+
+
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --color-primary: #5a78ff;
+            --color-secondary: #0957ff;
+        }
+
+        body {
+            overflow-x: hidden;
+            background-color: #1f314b;
+            font-family: Arial, sans-serif;
+        }
+
+        .clock {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: white;
+            background-color: #1f314b;
+            margin-left: 550px;
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: #f9e8e8;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #007bff !important;
+        }
+
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+
+        .nav-item.active .nav-link {
+            color: #007bff;
+            background-color: #f0f8ff;
+            font-weight: bold;
+        }
+
+        .container {
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin: 20px auto;
+            min-width: 90%;
+            max-width: 95%;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 20px;
+            color: #f0f8ff;
+        }
+
+        .container header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .alert-message {
+            width: 100%;
+            transition: all 0.3s ease;
+            transform: scale(0.9);
+        }
+
+        .alert-message.show {
+            display: block;
+            transform: scale(1);
+        }
+
+        .alert-message.hide {
+            display: none;
+        }
+
+        header .input-section {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .input-section input {
+            margin-right: 10px;
+            max-width: 100%;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex-grow: 1;
+            min-width: 200px;
+        }
+
+        .todos-filter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .todos-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100%;
+            max-height: 54vh;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .table {
+            width: 100%;
+            color: white;
+        }
+
+        .table th {
+            background-color: rgba(31, 49, 75, 0.7);
+        }
+
+        .table td {
+            background-color: rgba(31, 49, 75, 0.5);
+            vertical-align: middle;
+            color: white !important; 
+        }
+
+        .completed {
+            color: #0e0d0d !important;
+            text-decoration: line-through;
+            text-decoration-thickness: 5px; /* Controls thickness */
+        }
+
+        .no-todos {
+            color: #aaa;
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            width: 100%;
+        }
+
+        /* NEW STYLES FOR PRIORITY BADGES */
+        .badge-priority-H {
+            background-color: #dc3545; /* Red for High priority */
+        }
+        .badge-priority-M {
+            background-color: #ffc107; /* Yellow for Medium priority */
+            color: #0a0a0a !important;
+        }
+        .badge-priority-L {
+            background-color: #28a745; /* Green for Low priority */
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .clock {
+                margin-left: 300px;
+            }
+        }
+
+        @media only screen and (max-width: 992px) {
+            .clock {
+                margin-left: 200px;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            .clock {
+                margin-left: 100px;
+            }
+
+            .input-section {
+                flex-direction: column;
+            }
+
+            .input-section input {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .todos-filter {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media only screen and (max-width: 530px) {
+            .container {
+                margin: 10px auto;
+                max-width: 98%;
+                min-width: 98%;
+                padding: 15px;
+            }
+
+            .clock {
+                margin-left: 0;
+                text-align: center;
+                width: 100%;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            .table td,
+            .table th {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+
+        .alert-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color:floralwhite;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg" style="background-color: #1f314b;">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                    <li class="nav-item" style="font-size: 15px;">
+                        <a class="nav-link" aria-current="page" href="{% url 'userdash' %}">
+                            <i class="fas fa-home"></i> HOME
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notice' %}">
+                            <i class="fas fa-bell"></i> REMAINDER
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fas fa-info-circle"></i> ABOUT
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> LOGOUT
+                        </a>
+                    </li>
+                </ul>
+
+                <h1 class="display-4 clock"></h1>
+                <script>
+                    setInterval(function () {
+                        var date = new Date();
+                        var hours = date.getHours().toString().padStart(2, '0');
+                        var minutes = date.getMinutes().toString().padStart(2, '0');
+                        var seconds = date.getSeconds().toString().padStart(2, '0');
+
+                        document.querySelector('.clock').innerText = hours + ':' + minutes + ':' + seconds;
+                    }, 1000);
+                </script>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="background: #151f29;">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-2 col-xl-2 px-sm-2 px-0" style="background-color: #1f314b;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-white min-vh-100">
+                    <a href="/"
+                        class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline"><I><b>E-Planner</b></I></span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                        id="menu">
+                        <li class="nav-item">
+                            <a href="{% url 'notemyday' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-home fs-4"></i> <span class="ms-1 d-none d-sm-inline">NoteMyDay</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'todo_list' %}" class="nav-link align-middle px-0 ">
+                                <i class="fas fa-tasks fs-4"></i> <span class="ms-1 d-none d-sm-inline">ToDo-List</span>
+                            </a>
+                            
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'expenditure' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-wallet fs-4"></i> <span
+                                    class="ms-1 d-none d-sm-inline">DailyExpenditure</span>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a href="{% url 'notice' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-bell fs-4"></i> <span class="ms-1 d-none d-sm-inline">Remainder and
+                                    Notifications</span>
+                            </a>
+                        </li> -->
+                        <!-- <li class="nav-item">
+                            <a href="{% url 'project_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-chart-line fs-4"></i> <span
+                                    class="ms-1 d-none d-sm-inline">ProjectTracker</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'exam_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Exam
+                                    Preparation</span>
+                            </a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a href="{% url 'quiz' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-question-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Daily
+                                    Quiz</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col py-3">
+                <div class="container">
+                    <header>
+                        <h1>To-Do List</h1>
+                        <div class="alert-message hide" id="alertMessage"></div>
+                        <div class="input-section">
+                            {% csrf_token %}
+                            <input type="text" id="todoInput" placeholder="Add a new task..." class="form-control">
+                            <select id="todoPriority" class="form-select" style="width: 120px;">
+                                <option value="L">Low Priority</option>
+                                <option value="M" selected>Medium Priority</option>
+                                <option value="H">High Priority</option>
+                            </select>
+                            <button id="addTodo" class="btn btn-primary">Add Task</button>
+                        </div>
+                    </header>
+
+                    <div class="todos-filter">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary filter-btn" data-filter="all">All</button>
+                            <button type="button" class="btn btn-outline-primary filter-btn" data-filter="active">Active</button>
+                            <button type="button" class="btn btn-outline-primary filter-btn" data-filter="completed">Completed</button>
+                        </div>
+                    </div>
+
+                    <div class="todos-list">
+                        <table class="table">
+                            <thead>
+                                <tr style="color: rgb(254, 254, 254);">
+                                    <th width="5%" style="color: rgb(254, 254, 254);">Status</th>
+                                    <th width="10%" style="color: rgb(254, 254, 254);">Priority</th>
+                                    <th width="60%" style="color: rgb(254, 254, 254);">Task</th>
+                                    <th width="25%" style="color: rgb(254, 254, 254);">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="todosTableBody" >
+                                {% if not todos %}
+                                <tr>
+                                    <td colspan="4" class="no-todos" >No tasks added yet</td>
+                                </tr>
+                                {% else %}
+                                {% for todo in todos %}
+                                <tr id="todo-{{ todo.id }}" class="{% if todo.completed %}completed{% endif %}" style="color: rgb(141, 47, 47);">
+                                    <td>
+                                        <input type="checkbox" class="form-check-input todo-check" 
+                                            data-todo-id="{{ todo.id }}" 
+                                            {% if todo.completed %}checked{% endif %}>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-priority-{{ todo.priority }}">
+                                            {{ todo.get_priority_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ todo.title }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning edit-todo me-1" 
+                                            data-todo-id="{{ todo.id }}">Edit</button>
+                                        <button class="btn btn-sm btn-danger delete-todo" 
+                                            data-todo-id="{{ todo.id }}">Delete</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Todo Modal -->
+    <div class="modal fade" id="editTodoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editTodoInput" class="form-control mb-2">
+                    <select id="editTodoPriority" class="form-select">
+                        <option value="L">Low Priority</option>
+                        <option value="M">Medium Priority</option>
+                        <option value="H">High Priority</option>
+                    </select>
+                    <input type="hidden" id="editTodoId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveEditTodo">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get CSRF Token
+        function getCSRFToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+
+        // Show alert message
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.className = `alert-message show alert-${type}`;
+            setTimeout(() => {
+                alertDiv.className = 'alert-message hide';
+            }, 3000);
+        }
+
+        // Add new todo
+        async function addTodo() {
+            const todoInput = document.getElementById('todoInput');
+            const prioritySelect = document.getElementById('todoPriority');
+            const title = todoInput.value.trim();
+            const priority = prioritySelect.value;
+            
+            if (!title) {
+                showAlert('Please enter a task', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/add-todo/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        priority: priority
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to add task');
+                }
+
+                const data = await response.json();
+                
+                if (data.success && data.todo) {
+                    // Clear input
+                    todoInput.value = '';
+                    prioritySelect.value = 'M';
+                    
+                    // Add the new todo to the table
+                    addTodoToTable(data.todo);
+                    
+                    // Remove "No tasks" message if it exists
+                    const noTodosRow = document.querySelector('#todosTableBody tr td.no-todos');
+                    if (noTodosRow) {
+                        noTodosRow.parentElement.remove();
+                    }
+                    
+                    showAlert('Task added successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Add Todo Error:', error);
+                showAlert('Error adding task: ' + error.message, 'error');
+            }
+        }
+
+        // Add todo to table
+        // Add todo to table
+function addTodoToTable(todo) {
+    const tbody = document.getElementById('todosTableBody');
+    const row = document.createElement('tr');
+    row.id = `todo-${todo.id}`;
+    row.className = todo.completed ? 'completed' : '';
+    
+    // Format the date for display (client-side formatting)
+    const createdAt = new Date(todo.created_at);
+    const formattedDate = createdAt.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+    
+    row.innerHTML = `
+        <td>
+            <input type="checkbox" class="form-check-input todo-check" 
+                data-todo-id="${todo.id}" ${todo.completed ? 'checked' : ''}>
+        </td>
+        <td>
+            <span class="badge badge-priority-${todo.priority}">
+                ${todo.priority === 'L' ? 'Low' : todo.priority === 'M' ? 'Medium' : 'High'}
+            </span>
+        </td>
+        <td>${todo.title}</td>
+        <td>
+            <span class="text-muted small" style="margin-right: 10px;">${formattedDate}</span>
+            <button class="btn btn-sm btn-warning edit-todo me-1" 
+                data-todo-id="${todo.id}">Edit</button>
+            <button class="btn btn-sm btn-danger delete-todo" 
+                data-todo-id="${todo.id}">Delete</button>
+        </td>
+    `;
+    tbody.appendChild(row);
+}
+
+        // Toggle todo completion status
+        async function toggleTodoStatus(todoId, isChecked) {
+            try {
+                const response = await fetch(`/toggle-todo/${todoId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                    body: JSON.stringify({
+                        completed: isChecked
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to update task status');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    const todoRow = document.getElementById(`todo-${todoId}`);
+                    if (isChecked) {
+                        todoRow.classList.add('completed');
+                    } else {
+                        todoRow.classList.remove('completed');
+                    }
+                }
+            } catch (error) {
+                console.error('Toggle Todo Error:', error);
+                showAlert('Error updating task status', 'error');
+            }
+        }
+
+        // Delete todo
+        async function deleteTodo(todoId) {
+            try {
+                const response = await fetch(`/delete-todo/${todoId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to delete task');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    // Remove the todo from the table
+                    document.getElementById(`todo-${todoId}`).remove();
+                    
+                    // Show "No tasks" message if table is empty
+                    if (document.querySelectorAll('#todosTableBody tr').length === 0) {
+                        const tbody = document.getElementById('todosTableBody');
+                        const row = document.createElement('tr');
+                        row.innerHTML = '<td colspan="4" class="no-todos">No tasks added yet</td>';
+                        tbody.appendChild(row);
+                    }
+                    
+                    showAlert('Task deleted successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Delete Todo Error:', error);
+                showAlert('Error deleting task: ' + error.message, 'error');
+            }
+        }
+
+        // Edit todo
+        async function editTodo(todoId) {
+            try {
+                const response = await fetch(`/get-todo/${todoId}/`);
+                if (!response.ok) throw new Error('Failed to fetch todo');
+                
+                const todo = await response.json();
+                document.getElementById('editTodoInput').value = todo.title;
+                document.getElementById('editTodoPriority').value = todo.priority;
+                document.getElementById('editTodoId').value = todoId;
+                
+                const modal = new bootstrap.Modal(document.getElementById('editTodoModal'));
+                modal.show();
+            } catch (error) {
+                console.error('Edit Todo Error:', error);
+                showAlert('Error fetching task details', 'error');
+            }
+        }
+
+        // Save edited todo
+        async function saveEditedTodo() {
+            const todoId = document.getElementById('editTodoId').value;
+            const newTitle = document.getElementById('editTodoInput').value.trim();
+            const newPriority = document.getElementById('editTodoPriority').value;
+            
+            if (!newTitle) {
+                showAlert('Please enter a task', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/edit-todo/${todoId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                    body: JSON.stringify({
+                        title: newTitle,
+                        priority: newPriority
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to update task');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    // Update the table row
+                    const row = document.getElementById(`todo-${todoId}`);
+                    if (row) {
+                        row.querySelector('td:nth-child(3)').textContent = data.todo.title;
+                        const priorityBadge = row.querySelector('.badge');
+                        priorityBadge.className = `badge badge-priority-${data.todo.priority}`;
+                        priorityBadge.textContent = data.todo.priority === 'L' ? 'Low' : 
+                                                  data.todo.priority === 'M' ? 'Medium' : 'High';
+                    }
+                    
+                    // Hide modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editTodoModal'));
+                    modal.hide();
+                    
+                    showAlert('Task updated successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Save Edit Error:', error);
+                showAlert('Error updating task: ' + error.message, 'error');
+            }
+        }
+
+        // Filter todos
+        function filterTodos(filter) {
+            const todos = document.querySelectorAll('#todosTableBody tr[id^="todo-"]');
+            
+            todos.forEach(todo => {
+                switch(filter) {
+                    case 'all':
+                        todo.style.display = '';
+                        break;
+                    case 'active':
+                        if (todo.classList.contains('completed')) {
+                            todo.style.display = 'none';
+                        } else {
+                            todo.style.display = '';
+                        }
+                        break;
+                    case 'completed':
+                        if (todo.classList.contains('completed')) {
+                            todo.style.display = '';
+                        } else {
+                            todo.style.display = 'none';
+                        }
+                        break;
+                }
+            });
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add todo
+            document.getElementById('addTodo').addEventListener('click', addTodo);
+            document.getElementById('todoInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            });
+
+            // Toggle todo status
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('todo-check')) {
+                    const todoId = e.target.dataset.todoId;
+                    const isChecked = e.target.checked;
+                    toggleTodoStatus(todoId, isChecked);
+                }
+            });
+
+            // Delete todo
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-todo')) {
+                    const todoId = e.target.dataset.todoId;
+                    if (confirm('Are you sure you want to delete this task?')) {
+                        deleteTodo(todoId);
+                    }
+                }
+            });
+
+            // Edit todo
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('edit-todo')) {
+                    const todoId = e.target.dataset.todoId;
+                    editTodo(todoId);
+                }
+            });
+
+            // Save edited todo
+            document.getElementById('saveEditTodo').addEventListener('click', saveEditedTodo);
+
+            // Filter todos
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+                    filterTodos(filter);
+                    
+                    // Update active button
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

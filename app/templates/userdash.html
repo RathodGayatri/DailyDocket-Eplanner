@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HOME PAGE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        
+        html, body {
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            background-color: #1f314b;
+            font-family: Arial, sans-serif;
+            
+        }
+        img {
+            max-width: 100%; /* Make images responsive */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .clock {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: white;
+            background-color:  #1f314b;
+            margin-left: 550px;
+        }
+        .name {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: bold;
+            color: #010507;
+            opacity: 0.8;
+        }
+        .p {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            color: black;
+        }
+        .nav-link i {
+            margin-right: 8px;
+        }
+        .nav-link {
+            color: #f9e8e8;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #007bff !important; /* Change color on hover */
+        }
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+        .nav-link:hover i {
+            transform: scale(1.1); /* Slightly enlarge the icon on hover */
+        }
+        .nav-item.active .nav-link {
+            color: #007bff; /* Highlight color for the active item */
+            background-color: #f0f8ff; 
+           
+            font-weight: bold; /* Bold text for active item */
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s ease-in forwards;
+        }
+
+        /* Keyframes for fade-in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Delayed fade-in for smoother experience */
+        .fade-in-delay {
+            animation-delay: 1s;
+        }
+        
+    </style>
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg " style="background-color: #1f314b;">
+        <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding:0.2px"-->
+             <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding: 5px 10px; min-height: 30px;">-->
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                    <li class="nav-item" style="font-size: 15px;">
+                        <a class="nav-link" aria-current="page" href="{% url 'userdash' %}">
+                            <i class="fas fa-home"></i> HOME
+                        </a>
+                    </li>
+                
+                <!-- <ul class="navbar-nav ms-auto"> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notice' %}">
+                            <i class="fas fa-bell"></i> REMAINDER
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fas fa-info-circle"></i> ABOUT
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> LOGOUT
+                        </a>
+                    </li>
+                </ul>
+                
+                <h1 class="display-4 clock"></h1>
+                <script>
+                    setInterval(function() {
+                        var date = new Date();
+                        var hours = date.getHours().toString().padStart(2, '0');
+                        var minutes = date.getMinutes().toString().padStart(2, '0');
+                        var seconds = date.getSeconds().toString().padStart(2, '0');
+                        
+                        document.querySelector('.clock').innerText = hours + ':' + minutes + ':' + seconds;
+                    }, 1000);
+                </script>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="background: #151f29;">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-2 col-xl-2 px-sm-2 px-0 " style="background-color: #1f314b;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-white min-vh-100">
+                    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline"><I><b>E-Planner</b></I></span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="{% url 'notemyday' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-home fs-4"></i> <span class="ms-1 d-none d-sm-inline">NoteMyDay</span>
+                            </a>
+                            <li class="nav-item">
+                                <a href="{% url 'todo_list' %}" class="nav-link align-middle px-0">
+                                    <i class="fas fa-tasks fs-4"></i> <span class="ms-1 d-none d-sm-inline">ToDo-List</span>
+                                </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'expenditure' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-wallet fs-4"></i> <span class="ms-1 d-none d-sm-inline">DailyExpenditure</span>
+                            </a>
+                        </li>
+                     
+                        <li class="nav-item">
+                            <a href="{% url 'quiz' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-question-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Daily Quiz</span>
+                            </a>
+                        </li>
+                       
+                    </ul>
+                </div>
+            </div>
+            <div class="col py-3 fade-in">
+                <center>
+                    <marquee scrollamount="10" i style="font-family: 'Poppins', sans-serif; color: white; font-size: 1.5em; font-weight: bold;">Welcome to Engineer's Daily Planner!</i></marquee>
+                    <!-- <img src="view.jpg" alt="Welcome Image" width="400" height="100" vspace="5" hspace="100"> -->
+                    <img src="https://www.millenniumpost.in/h-upload/2023/02/13/672761-software-developer-g51f2a7b6f1920-1.webp"  width="900" height="700" vspace="5" hspace="100" >
+                </center>
+                <center>
+                <footer style="color:white ;">
+                    <p>&copy; 2025 Engineer's Daily Plan Tracker. All rights reserved.</p>
+                </footer>
+                
+            </center>
+            <!-- ................................................................................ -->
+
+            
+            <!-- Place inside <div class="col py-3 fade-in"> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        // Send time data to server when page closes/refreshes
+window.addEventListener('beforeunload', async () => {
+    const tasks = document.querySelectorAll('.time-tracker');
+    for (const tracker of tasks) {
+        const taskName = tracker.dataset.task;
+        const timeSpent = parseInt(localStorage.getItem(`time_${taskName}`)) || 0;
+        
+        if (timeSpent > 0) {
+            await fetch('/update_time_log/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    task_name: taskName,
+                    duration_seconds: timeSpent,
+                }),
+            });
+            localStorage.removeItem(`time_${taskName}`);  // Reset after saving
+        }
+    }
+});
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HOME PAGE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        
+        html, body {
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            background-color: #1f314b;
+            font-family: Arial, sans-serif;
+            
+        }
+        img {
+            max-width: 100%; /* Make images responsive */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .clock {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: white;
+            background-color:  #1f314b;
+            margin-left: 550px;
+        }
+        .name {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: bold;
+            color: #010507;
+            opacity: 0.8;
+        }
+        .p {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            color: black;
+        }
+        .nav-link i {
+            margin-right: 8px;
+        }
+        .nav-link {
+            color: #f9e8e8;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #007bff !important; /* Change color on hover */
+        }
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+        .nav-link:hover i {
+            transform: scale(1.1); /* Slightly enlarge the icon on hover */
+        }
+        .nav-item.active .nav-link {
+            color: #007bff; /* Highlight color for the active item */
+            background-color: #f0f8ff; 
+           
+            font-weight: bold; /* Bold text for active item */
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s ease-in forwards;
+        }
+
+        /* Keyframes for fade-in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Delayed fade-in for smoother experience */
+        .fade-in-delay {
+            animation-delay: 1s;
+        }
+
+        .time-tracker {
+    margin-top: 5px;
+    padding-left: 10px;
+}
+.start-btn, .stop-btn {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+}
+.time-display {
+    font-size: 0.8rem;
+}
+        
+    </style>
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg " style="background-color: #1f314b;">
+        <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding:0.2px"-->
+             <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding: 5px 10px; min-height: 30px;">-->
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                    <li class="nav-item" style="font-size: 15px;">
+                        <a class="nav-link" aria-current="page" href="{% url 'userdash' %}">
+                            <i class="fas fa-home"></i> HOME
+                        </a>
+                    </li>
+                
+                <!-- <ul class="navbar-nav ms-auto"> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notice' %}">
+                            <i class="fas fa-bell"></i> REMAINDER
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fas fa-info-circle"></i> ABOUT
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> LOGOUT
+                        </a>
+                    </li>
+                </ul>
+                
+                <h1 class="display-4 clock"></h1>
+                <script>
+                    setInterval(function() {
+                        var date = new Date();
+                        var hours = date.getHours().toString().padStart(2, '0');
+                        var minutes = date.getMinutes().toString().padStart(2, '0');
+                        var seconds = date.getSeconds().toString().padStart(2, '0');
+                        
+                        document.querySelector('.clock').innerText = hours + ':' + minutes + ':' + seconds;
+                    }, 1000);
+                </script>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="background: #151f29;">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-2 col-xl-2 px-sm-2 px-0 " style="background-color: #1f314b;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-white min-vh-100">
+                    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline"><I><b>E-Planner</b></I></span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="{% url 'notemyday' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-home fs-4"></i> <span class="ms-1 d-none d-sm-inline">NoteMyDay</span>
+                            </a>
+                            <div class="time-tracker" data-task="NoteMyDay">
+                                <button class="btn btn-sm btn-success start-btn">Start</button>
+                                <button class="btn btn-sm btn-danger stop-btn" disabled>Stop</button>
+                                <span class="time-display ms-2 text-white">0h 0m 0s</span>
+                            </div>
+                            <li class="nav-item">
+                                <a href="{% url 'todo_list' %}" class="nav-link align-middle px-0">
+                                    <i class="fas fa-tasks fs-4"></i> <span class="ms-1 d-none d-sm-inline">ToDo-List</span>
+                                </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'expenditure' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-wallet fs-4"></i> <span class="ms-1 d-none d-sm-inline">DailyExpenditure</span>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a href="{% url 'notice' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-bell fs-4"></i> <span class="ms-1 d-none d-sm-inline">Remainder and Notifications</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'project_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-chart-line fs-4"></i> <span class="ms-1 d-none d-sm-inline">ProjectTracker</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'exam_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Exam Preparation</span>
+                            </a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a href="{% url 'quiz' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-question-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Daily Quiz</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mt-auto"> <!-- Bottom-aligned -->
+                            <button id="viewLogsBtn" class="nav-link align-middle px-0 bg-transparent border-0 text-white">
+                                <i class="fas fa-chart-pie fs-4"></i> 
+                                <span class="ms-1 d-none d-sm-inline">Time Analytics</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col py-3 fade-in">
+                <center>
+                    <marquee scrollamount="10" i style="font-family: 'Poppins', sans-serif; color: white; font-size: 1.5em; font-weight: bold;">Welcome to Engineer's Daily Planner!</i></marquee>
+                    <!-- <img src="view.jpg" alt="Welcome Image" width="650" height="250" vspace="5" hspace="100"> -->
+                    <img src="https://www.millenniumpost.in/h-upload/2023/02/13/672761-software-developer-g51f2a7b6f1920-1.webp"  width="650" height="250" vspace="5" hspace="100" >
+                </center>
+                <center>
+                <footer style="color:white ;">
+                    <p>&copy; 2025 Daily Expenditure Tracker. All rights reserved.</p>
+                </footer>
+                
+               <!-- <p class="p">
+                    Improved productivity and time management<br>
+                    Enhanced organization and prioritization<br>
+                    Better collaboration and communication<br>
+                    Increased goal achievement<br>
+                    Reduced stress and increased job satisfaction
+                </p>-->
+                <!-- Time Logs Modal -->
+<div class="modal fade" id="timeLogsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #1f314b; color: white;">
+            <div class="modal-header">
+                <h5 class="modal-title">Time Tracking Summary</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Time Spent</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+                <button id="exportLogsBtn" class="btn btn-sm btn-success mt-3">Export as CSV</button>
+            </div>
+        </div>
+    </div>
+</div>
+            </center>
+            <!-- Place inside <div class="col py-3 fade-in"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    
+// Time Tracker Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const trackers = document.querySelectorAll('.time-tracker');
+
+    trackers.forEach(tracker => {
+        const startBtn = tracker.querySelector('.start-btn');
+        const stopBtn = tracker.querySelector('.stop-btn');
+        const timeDisplay = tracker.querySelector('.time-display');
+        const taskName = tracker.dataset.task;
+
+        let startTime;
+        let totalTime = parseInt(localStorage.getItem(`time_${taskName}`)) || 0;
+
+        // Load saved time
+        timeDisplay.textContent = formatTime(totalTime);
+
+        startBtn.addEventListener('click', () => {
+            startTime = new Date();
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (!startTime) return;
+
+            const endTime = new Date();
+            const timeSpent = Math.floor((endTime - startTime) / 1000); // in seconds
+            totalTime += timeSpent;
+
+            timeDisplay.textContent = formatTime(totalTime);
+            localStorage.setItem(`time_${taskName}`, totalTime);
+
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            startTime = null;
+        });
+    });
+
+    function formatTime(seconds) {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${hrs}h ${mins}m ${secs}s`;
+    }
+});
+
+// Summary Modal Logic
+document.getElementById('viewLogsBtn').addEventListener('click', () => {
+    const modal = new bootstrap.Modal(document.getElementById('timeLogsModal'));
+    updateLogsTable();
+    modal.show();
+});
+
+function updateLogsTable() {
+    const tbody = document.getElementById('logsTableBody');
+    tbody.innerHTML = '';
+    let totalTime = 0;
+
+    document.querySelectorAll('.time-tracker').forEach(tracker => {
+        const taskName = tracker.dataset.task;
+        const timeSpent = parseInt(localStorage.getItem(`time_${taskName}`)) || 0;
+        totalTime += timeSpent;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${taskName}</td>
+            <td>${formatTime(timeSpent)}</td>
+            <td><button class="btn btn-sm btn-warning reset-btn" data-task="${taskName}">Reset</button></td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    // Add total row
+    const totalRow = document.createElement('tr');
+    totalRow.innerHTML = `
+        <td><strong>Total</strong></td>
+        <td><strong>${formatTime(totalTime)}</strong></td>
+        <td></td>
+    `;
+    tbody.appendChild(totalRow);
+
+    // Add reset all button
+    const resetAllRow = document.createElement('tr');
+    resetAllRow.innerHTML = `
+        <td colspan="3" class="text-center">
+            <button id="resetAllBtn" class="btn btn-sm btn-danger">Reset All Logs</button>
+        </td>
+    `;
+    tbody.appendChild(resetAllRow);
+
+    // Attach reset handlers
+    document.querySelectorAll('.reset-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const task = e.target.dataset.task;
+            localStorage.removeItem(`time_${task}`);
+            updateLogsTable();
+            document.querySelector(`.time-tracker[data-task="${task}"] .time-display`).textContent = '0h 0m 0s';
+        });
+    });
+
+    document.getElementById('resetAllBtn').addEventListener('click', () => {
+        document.querySelectorAll('.time-tracker').forEach(tracker => {
+            const taskName = tracker.dataset.task;
+            localStorage.removeItem(`time_${taskName}`);
+            tracker.querySelector('.time-display').textContent = '0h 0m 0s';
+        });
+        updateLogsTable();
+    });
+
+    // Export to CSV
+    document.getElementById('exportLogsBtn').addEventListener('click', () => {
+        let csv = 'Task,Time Spent\n';
+        document.querySelectorAll('.time-tracker').forEach(tracker => {
+            const taskName = tracker.dataset.task;
+            const timeSpent = localStorage.getItem(`time_${taskName}`) || 0;
+            csv += `${taskName},${formatTime(timeSpent)}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'time_logs.csv';
+        a.click();
+    });
+}
+</script>
+
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

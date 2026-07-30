@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Reminder App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        /* Navbar styles */
+        .navbar {
+            background-color: #1f314b;
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+        }
+        
+        .nav-link {
+            color: #f9e8e8;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #007bff !important;
+        }
+        
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+        
+        .nav-item.active .nav-link {
+            color: #007bff;
+            background-color: #f0f8ff;
+            font-weight: bold;
+        }
+        
+        .clock {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #1f314b;
+            min-height: calc(100vh - 56px);
+            color: white;
+        }
+        
+        .sidebar .nav-link {
+            color: white;
+            padding: 10px 15px;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Main content styles */
+        .main-content {
+            padding: 20px;
+            background-color: #151f29;
+            min-height: calc(100vh - 56px);
+        }
+        
+        /* Reminder app styles */
+        .reminder-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .reminder-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .reminder-item:last-child {
+            border-bottom: none;
+        }
+        
+        .reminder-time {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .reminder-text {
+            flex-grow: 1;
+            margin: 0 15px;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .notification-permission {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .clock {
+                margin-left: 0;
+                text-align: center;
+            }
+            
+            .sidebar {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'userdash' %}">
+                            <i class="fas fa-home"></i> HOME
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'notice' %}">
+                            <i class="fas fa-bell"></i> REMINDER
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fas fa-info-circle"></i> ABOUT
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> LOGOUT
+                        </a>
+                    </li>
+                </ul>
+                <h1 class="display-4 clock m-0"></h1>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 px-0 sidebar">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline"><i><b>E-Planner</b></i></span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100" id="menu">
+                        <li class="nav-item w-100">
+                            <a href="{% url 'notemyday' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-home fs-4"></i> <span class="ms-1 d-none d-sm-inline">NoteMyDay</span>
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="{% url 'todo_list' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-tasks fs-4"></i> <span class="ms-1 d-none d-sm-inline">ToDo-List</span>
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="{% url 'expenditure' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-wallet fs-4"></i> <span class="ms-1 d-none d-sm-inline">DailyExpenditure</span>
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a href="{% url 'quiz' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-question-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Daily Quiz</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <div class="reminder-container">
+                    <h1>Reminder App</h1>
+                    
+                    <div id="permission-alert" class="notification-permission" style="display: none;">
+                        Please enable notifications for this site to receive reminders.
+                        <button onclick="requestNotificationPermission()">Enable Notifications</button>
+                    </div>
+                    
+                    <div class="reminder-form">
+                        <div class="form-group">
+                            <label for="reminder-text">Reminder Text</label>
+                            <textarea id="reminder-text" rows="3" placeholder="What do you want to be reminded about?"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reminder-date">Date</label>
+                            <input type="date" id="reminder-date">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reminder-time">Time</label>
+                            <input type="time" id="reminder-time">
+                        </div>
+                        
+                        <button onclick="addReminder()" class="btn btn-primary">Set Reminder</button>
+                    </div>
+                </div>
+                
+                <div class="reminder-container">
+                    <h2>Upcoming Reminders</h2>
+                    <div id="reminders-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Clock functionality
+        setInterval(function() {
+            var date = new Date();
+            var hours = date.getHours().toString().padStart(2, '0');
+            var minutes = date.getMinutes().toString().padStart(2, '0');
+            var seconds = date.getSeconds().toString().padStart(2, '0');
+            
+            document.querySelector('.clock').innerText = hours + ':' + minutes + ':' + seconds;
+        }, 1000);
+
+        // Check notification permission on load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkNotificationPermission();
+            loadReminders();
+            checkReminders();
+            setInterval(checkReminders, 60000); // Check every minute
+        });
+        
+        // Request notification permission
+        function requestNotificationPermission() {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === 'granted') {
+                    document.getElementById('permission-alert').style.display = 'none';
+                    showTestNotification();
+                }
+            });
+        }
+        
+        // Check current notification permission
+        function checkNotificationPermission() {
+            if (Notification.permission !== 'granted') {
+                document.getElementById('permission-alert').style.display = 'block';
+            }
+        }
+        
+        // Show a test notification
+        function showTestNotification() {
+            if (Notification.permission === 'granted') {
+                new Notification('Reminder App', {
+                    body: 'Notifications are enabled! You will now receive reminders.',
+                    icon: 'https://cdn-icons-png.flaticon.com/512/3652/3652191.png'
+                });
+            }
+        }
+        
+        // Add a new reminder
+        function addReminder() {
+            const text = document.getElementById('reminder-text').value.trim();
+            const date = document.getElementById('reminder-date').value;
+            const time = document.getElementById('reminder-time').value;
+            
+            if (!text || !date || !time) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const reminder = {
+                id: Date.now(),
+                text: text,
+                date: date,
+                time: time,
+                notified: false
+            };
+            
+            let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+            reminders.push(reminder);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            
+            document.getElementById('reminder-text').value = '';
+            document.getElementById('reminder-date').value = '';
+            document.getElementById('reminder-time').value = '';
+            
+            loadReminders();
+        }
+        
+        // Load reminders from localStorage
+        function loadReminders() {
+            const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+            const container = document.getElementById('reminders-container');
+            container.innerHTML = '';
+            
+            if (reminders.length === 0) {
+                container.innerHTML = '<p>No reminders set yet.</p>';
+                return;
+            }
+            
+            // Sort reminders by date and time
+            reminders.sort((a, b) => {
+                const dateA = new Date(`${a.date}T${a.time}`);
+                const dateB = new Date(`${b.date}T${b.time}`);
+                return dateA - dateB;
+            });
+            
+            reminders.forEach(reminder => {
+                const reminderElement = document.createElement('div');
+                reminderElement.className = 'reminder-item';
+                
+                const dateTime = new Date(`${reminder.date}T${reminder.time}`);
+                const formattedDate = dateTime.toLocaleDateString();
+                const formattedTime = dateTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                reminderElement.innerHTML = `
+                    <div class="reminder-time">${formattedDate} at ${formattedTime}</div>
+                    <div class="reminder-text">${reminder.text}</div>
+                    <button class="delete-btn" onclick="deleteReminder(${reminder.id})">Delete</button>
+                `;
+                
+                container.appendChild(reminderElement);
+            });
+        }
+        
+        // Delete a reminder
+        function deleteReminder(id) {
+            let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+            reminders = reminders.filter(reminder => reminder.id !== id);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            loadReminders();
+        }
+        
+        // Check for reminders that are due
+        function checkReminders() {
+            const now = new Date();
+            let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+            let updated = false;
+            
+            reminders.forEach(reminder => {
+                const reminderDate = new Date(`${reminder.date}T${reminder.time}`);
+                
+                if (!reminder.notified && reminderDate <= now) {
+                    // Show notification
+                    if (Notification.permission === 'granted') {
+                        new Notification('Reminder', {
+                            body: reminder.text,
+                            icon: 'https://cdn-icons-png.flaticon.com/512/3652/3652191.png'
+                        });
+                    } else {
+                        alert(`Reminder: ${reminder.text}`);
+                    }
+                    
+                    reminder.notified = true;
+                    updated = true;
+                }
+            });
+            
+            // Remove old reminders (older than 1 day)
+            const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+            const originalLength = reminders.length;
+            reminders = reminders.filter(reminder => {
+                const reminderDate = new Date(`${reminder.date}T${reminder.time}`);
+                return reminderDate >= oneDayAgo || !reminder.notified;
+            });
+            
+            if (reminders.length !== originalLength) {
+                updated = true;
+            }
+            
+            if (updated) {
+                localStorage.setItem('reminders', JSON.stringify(reminders));
+                loadReminders();
+            }
+        }
+    </script>
+</body>
+</html>

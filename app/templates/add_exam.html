@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Add New Exam</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="title" class="form-label">Exam Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="course_code" class="form-label">Course Code</label>
+                <input type="text" class="form-control" id="course_code" name="course_code" required>
+            </div>
+            <div class="col-md-6">
+                <label for="exam_type" class="form-label">Exam Type</label>
+                <select class="form-select" id="exam_type" name="exam_type">
+                    {% for code, name in exam_types %}
+                    <option value="{{ code }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date" name="date" 
+                       value="{{ default_date }}" required>
+            </div>
+            <div class="col-md-4">
+                <label for="start_time" class="form-label">Start Time</label>
+                <input type="time" class="form-control" id="start_time" name="start_time" 
+                       value="{{ default_start }}" required>
+            </div>
+            <div class="col-md-4">
+                <label for="end_time" class="form-label">End Time</label>
+                <input type="time" class="form-control" id="end_time" name="end_time" 
+                       value="{{ default_end }}" required>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="location" class="form-label">Location (optional)</label>
+            <input type="text" class="form-control" id="location" name="location">
+        </div>
+        
+        <div class="mb-3">
+            <label for="priority" class="form-label">Priority</label>
+            <select class="form-select" id="priority" name="priority">
+                <option value="1">High</option>
+                <option value="2" selected>Medium</option>
+                <option value="3">Low</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="syllabus" class="form-label">Syllabus/Topics (optional)</label>
+            <textarea class="form-control" id="syllabus" name="syllabus" rows="4"></textarea>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'exam_list' %}" class="btn btn-secondary me-md-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Exam</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+</body>
+</html>

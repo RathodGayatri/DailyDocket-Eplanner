@@ -1,0 +1,165 @@
+<!-- <!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Register</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-image: url(not.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .form-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            width: 350px;
+        }
+        .form-box header {
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .input-box {
+            margin-bottom: 20px;
+        }
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            outline: none;
+        }
+        .submit {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .submit:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .link {
+            color: #fff;
+            text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <header>Sign Up</header>
+            <form action="userdash.html" method="post">
+                <div class="input-box">
+                    <input type="text" placeholder="Firstname" required>
+                </div>
+                <div class="input-box">
+                    <input type="text" placeholder="Lastname" required>
+                </div>
+                <div class="input-box">
+                    <input type="email" placeholder="Email" required>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <div class="input-box">
+                    <input type="submit" value="Register" class="submit">
+                </div>
+            </form>
+            <p>Already have an account? <a href="newlogin.html" class="link">Sign In</a></p>
+        </div>
+    </div>
+</body>
+</html> -->
+
+<html>
+<head>
+<title>My Web Page</title>
+<style>
+	body{
+		background-image: url("not.jpg");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+	}
+	#div{
+		width: 300px;
+		height: 400px;
+		background-color: rgb(234, 229, 229);
+	    margin-left:400px;
+		margin-top:70px;
+		border:2px solid black;
+		opacity: 0.8;
+		border-radius: 35px 10px;
+        margin: 70px auto;
+	}
+	#img1{
+		width: 100px;
+		height: 100px;
+		margin-left: 100px;
+		margin-top: -40px;
+		border-radius: 50%;
+	}
+	h2{
+		margin-left: 80px;
+		margin-top: 5px;
+	}
+	#input{
+		margin-left: 50px;
+		margin-top: 10px;
+		padding: 10px;
+	}
+	#btn{
+		margin-left: 110px;
+		margin-top: 10px;
+		padding: 10px;
+	}
+	#btn:hover{
+		background-color: black;
+		color:white;
+	}
+
+</style>
+</head>
+<body>
+{% include 'navbar.html' %}
+<div id="div">
+	<form action="" method="post">
+	{% csrf_token %}
+	<img src="/static/signuplogo.jpg" id="img1">
+	<h2>SignUp Window</h2>
+	<input type="text" name="name" placeholder="Enter Name" id="input" required>
+	<input type="text" name="mob" placeholder="Enter Mobile" id="input"required>
+	<input type="email" name="email" placeholder="Enter Email" id="input"required>
+	<input type="password" name="pass" placeholder="Create Password" id="input"required><br><br>
+	<input type="submit" value="SingUp" id="btn">
+	</form>
+</div>
+</body>
+</html> 

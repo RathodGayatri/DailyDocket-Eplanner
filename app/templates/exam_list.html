@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Tracker | E-Planner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #1e1e2f;
+            --card-bg: #2a2d3e;
+            --text-color: #ffffff;
+            --highlight: #ff5e62;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .exam-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            border-left: 4px solid;
+        }
+        
+        .exam-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .priority-high { border-color: #e74c3c; }
+        .priority-medium { border-color: #f39c12; }
+        .priority-low { border-color: #3498db; }
+        
+        .progress {
+            height: 8px;
+            background-color: #3a3f58;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            border: none;
+        }
+        
+        .subject-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-book-open me-2"></i>Exam Tracker</h2>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExamModal">
+                <i class="fas fa-plus me-2"></i>Add Exam
+            </button>
+        </div>
+        
+        <!-- Exam Cards -->
+        <div class="row g-4" id="examContainer">
+            <!-- Example Exam Card (will be populated by JS) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="exam-card p-3 priority-high">
+                    <div class="d-flex justify-content-between">
+                        <h5>Mathematics Final</h5>
+                        <span class="badge bg-danger">High</span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <div>
+                            <small class="text-muted">Date:</small>
+                            <p>May 15, 2023 • 9:00 AM</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">Days Left:</small>
+                            <p class="fw-bold">12</p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small>Progress:</small>
+                        <div class="progress mt-1">
+                            <div class="progress-bar" style="width: 45%"></div>
+                        </div>
+                        <small class="text-muted">45% completed</small>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="study_plan.html" class="btn btn-sm btn-outline-light">
+                            <i class="fas fa-tasks me-1"></i> Study Plan
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Exam Modal -->
+    <div class="modal fade" id="addExamModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Exam</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="examForm">
+                        <div class="mb-3">
+                            <label class="form-label">Exam Title</label>
+                            <input type="text" class="form-control bg-secondary text-white" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control bg-secondary text-white" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control bg-secondary text-white">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control bg-secondary text-white">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select bg-secondary text-white">
+                                <option value="1">High</option>
+                                <option value="2" selected>Medium</option>
+                                <option value="3">Low</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Syllabus/Notes</label>
+                            <textarea class="form-control bg-secondary text-white" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveExamBtn">Save Exam</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data - replace with actual API calls
+        const exams = [
+            {
+                id: 1,
+                title: "Mathematics Final",
+                date: "2023-05-15",
+                time: "09:00",
+                location: "Room 101",
+                priority: 1,
+                progress: 45
+            },
+            {
+                id: 2,
+                title: "Physics Midterm",
+                date: "2023-05-22",
+                time: "13:30",
+                location: "Lab Building",
+                priority: 2,
+                progress: 30
+            },
+            {
+                id: 3,
+                title: "History Presentation",
+                date: "2023-06-01",
+                priority: 3,
+                progress: 80
+            }
+        ];
+
+        // Render exams
+        function renderExams() {
+            const container = document.getElementById('examContainer');
+            container.innerHTML = '';
+            
+            exams.forEach(exam => {
+                const daysLeft = Math.floor((new Date(exam.date) - new Date()) / (1000 * 60 * 60 * 24));
+                const priorityClass = exam.priority === 1 ? 'priority-high' : 
+                                    exam.priority === 2 ? 'priority-medium' : 'priority-low';
+                const priorityText = exam.priority === 1 ? 'High' : 
+                                   exam.priority === 2 ? 'Medium' : 'Low';
+                const badgeClass = exam.priority === 1 ? 'bg-danger' : 
+                                 exam.priority === 2 ? 'bg-warning' : 'bg-info';
+                
+                container.innerHTML += `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="exam-card p-3 ${priorityClass}">
+                            <div class="d-flex justify-content-between">
+                                <h5>${exam.title}</h5>
+                                <span class="badge ${badgeClass}">${priorityText}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <div>
+                                    <small class="text-muted">Date:</small>
+                                    <p>${formatDate(exam.date)}${exam.time ? ' • ' + formatTime(exam.time) : ''}</p>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">Days Left:</small>
+                                    <p class="fw-bold">${daysLeft}</p>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <small>Progress:</small>
+                                <div class="progress mt-1">
+                                    <div class="progress-bar" style="width: ${exam.progress}%"></div>
+                                </div>
+                                <small class="text-muted">${exam.progress}% completed</small>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="study_plan.html?exam=${exam.id}" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-tasks me-1"></i> Study Plan
+                                </a>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteExam(${exam.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Helper functions
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function formatTime(timeString) {
+            return new Date(`2000-01-01T${timeString}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Event listeners
+        document.getElementById('saveExamBtn').addEventListener('click', () => {
+            // Here you would normally make an API call to save the exam
+            alert('Exam saved successfully!');
+            bootstrap.Modal.getInstance(document.getElementById('addExamModal')).hide();
+        });
+
+        function deleteExam(id) {
+            if (confirm('Are you sure you want to delete this exam?')) {
+                // Here you would make an API call to delete the exam
+                alert('Exam deleted!');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', renderExams);
+    </script>
+</body>
+</html>

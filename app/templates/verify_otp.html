@@ -1,0 +1,191 @@
+<html>
+<head>
+<title>OTP Verification - Engineer's Daily Planner</title>
+<style>
+    body {
+        background-image: url("not.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    #div {
+        width: 300px;
+        height: auto;
+        min-height: 350px;
+        background-color: rgba(234, 229, 229, 0.9);
+        margin: 70px auto;
+        border: 2px solid black;
+        border-radius: 35px 10px;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    #img1 {
+        width: 100px;
+        height: 100px;
+        display: block;
+        margin: -40px auto 10px auto;
+    }
+    h2 {
+        text-align: center;
+        margin: 10px 0 20px 0;
+        color: #333;
+    }
+    #input {
+        width: 80%;
+        padding: 12px;
+        margin: 10px auto;
+        display: block;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    #btn {
+        width: 85%;
+        padding: 12px;
+        margin: 20px auto;
+        display: block;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    #btn:hover {
+        background-color: #45a049;
+    }
+    .alert-success {
+        color: #28a745;
+        text-align: center;
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #d4edda;
+        border-radius: 5px;
+    }
+    .alert-error {
+        color: #dc3545;
+        text-align: center;
+        margin: 15px 0;
+        padding: 10px;
+        background-color: #f8d7da;
+        border-radius: 5px;
+    }
+    .email-display {
+        text-align: center;
+        font-weight: bold;
+        margin: 10px 0;
+        color: #333;
+        word-break: break-all;
+    }
+    .timer {
+        text-align: center;
+        color: #6c757d;
+        margin: 10px 0;
+        font-size: 14px;
+    }
+    .timer-expired {
+        color: #dc3545;
+    }
+    .otp-instructions {
+        text-align: center;
+        color: #6c757d;
+        font-size: 14px;
+        margin: 10px 0;
+    }
+    .resend-link {
+        text-align: center;
+        margin-top: 15px;
+    }
+    .resend-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .resend-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+{% include 'navbar.html' %}
+<div id="div">
+    <img src="/static/logo.png" id="img1" alt="App Logo">
+    <h2>OTP Verification</h2>
+    
+    <div class="email-display">
+        Code sent to: {{ email }}
+    </div>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <p class="otp-instructions">Enter the 6-digit verification code sent to your email</p>
+    
+    <form method="post" action="{% url 'verify_otp' %}">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="text" name="otp" placeholder="Enter OTP" id="input" required 
+               pattern="\d{6}" title="Please enter a 6-digit number" maxlength="6"
+               inputmode="numeric">
+        <input type="submit" value="Verify OTP" id="btn">
+    </form>
+    
+    <!-- Timer and Resend Link -->
+    <div class="timer" id="timer">
+        Code expires in: <span id="countdown">02:00</span>
+    </div>
+    <div class="resend-link">
+        <a href="{% url 'resend_otp' %}" id="resendLink" style="display:none;">Resend OTP</a>
+    </div>
+</div>
+
+<script>
+    // Get remaining time from server-side variable
+    const remainingTime = parseInt("{{ remaining_time }}");
+    let timeLeft = remainingTime > 0 ? remainingTime : 0;
+    
+    const timerElement = document.getElementById('countdown');
+    const resendLink = document.getElementById('resendLink');
+    const otpInput = document.getElementById('input');
+    const submitBtn = document.getElementById('btn');
+
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        timerElement.textContent = `${minutes}:${seconds}`;
+        
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerElement.textContent = "Expired";
+            document.getElementById('timer').classList.add('timer-expired');
+            resendLink.style.display = 'inline';
+            otpInput.disabled = true;
+            submitBtn.disabled = true;
+        }
+        timeLeft--;
+    }
+
+    // Only start timer if time remains
+    if (timeLeft > 0) {
+        var countdown = setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+    } else {
+        timerElement.textContent = "Expired";
+        document.getElementById('timer').classList.add('timer-expired');
+        resendLink.style.display = 'inline';
+        otpInput.disabled = true;
+        submitBtn.disabled = true;
+    }
+</script>
+</body>
+</html>

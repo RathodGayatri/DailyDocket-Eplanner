@@ -1,0 +1,48 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="clock.css">
+    <title>clock</title>
+    <style>
+      body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    margin-left: 700px; 
+   
+  }
+  
+  .clock {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+  }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <h1 class="display-4 clock"></h1>
+          </div>
+        </div>
+      </div>
+      <script>
+        setInterval(function() {
+    var date = new Date();
+    var hours = date.getHours().toString().padStart(2, '0');
+    var minutes = date.getMinutes().toString().padStart(2, '0');
+    var seconds = date.getSeconds().toString().padStart(2, '0');
+    
+    document.querySelector('.clock').innerText = hours + ':' + minutes + ':' + seconds;
+  }, 1000);
+  
+  
+      </script> 
+      
+      
+</body>
+</html>
+
+

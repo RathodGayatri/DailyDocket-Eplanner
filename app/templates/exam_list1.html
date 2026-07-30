@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Exam Planner Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c63ff;
+            --secondary: #4d44db;
+            --danger: #ff6b6b;
+            --success: #51cf66;
+            --warning: #fcc419;
+            --dark: #343a40;
+            --light: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .subject-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+        
+        .priority-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .priority-indicator span {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .low { background-color: var(--success); }
+        .medium { background-color: var(--warning); }
+        .high { background-color: var(--danger); }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .stat-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .timetable {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .timetable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timetable-header h3 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .days {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        
+        .day {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .day.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .schedule {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .time-block {
+            background-color: white;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .time-block.high-priority {
+            border-left-color: var(--danger);
+        }
+        
+        .time-block.medium-priority {
+            border-left-color: var(--warning);
+        }
+        
+        .time-block.low-priority {
+            border-left-color: var(--success);
+        }
+        
+        .time-block-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .time {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .priority {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .priority.high {
+            background-color: rgba(255, 107, 107, 0.1);
+            color: var(--danger);
+        }
+        
+        .priority.medium {
+            background-color: rgba(252, 196, 25, 0.1);
+            color: var(--warning);
+        }
+        
+        .priority.low {
+            background-color: rgba(81, 207, 102, 0.1);
+            color: var(--success);
+        }
+        
+        .subject {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-container {
+            margin-top: 1rem;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .motivation-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+        }
+        
+        .motivation-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .motivation-card h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .motivation-card p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .btn-light {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-light:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .schedule {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>Smart Exam Planner Pro</span>
+            </div>
+            <button class="btn btn-primary">
+                <i class="fas fa-user-circle"></i> Student Dashboard
+            </button>
+        </header>
+        
+        <div class="dashboard">
+            <div class="sidebar">
+                <h3><i class="fas fa-book-open"></i> Add Subjects</h3>
+                <form class="subject-form">
+                    <div class="form-group">
+                        <label for="subject">Subject Name</label>
+                        <input type="text" id="subject" class="form-control" placeholder="e.g. Mathematics">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exam-date">Exam Date</label>
+                        <input type="date" id="exam-date" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Priority Level</label>
+                        <select class="form-control">
+                            <option value="high">High Priority</option>
+                            <option value="medium" selected>Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <div class="priority-indicator">
+                            <span class="high"></span> High
+                            <span class="medium"></span> Medium
+                            <span class="low"></span> Low
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty Level (1-5)</label>
+                        <input type="range" id="difficulty" min="1" max="5" value="3" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current-level">Current Understanding (%)</label>
+                        <input type="range" id="current-level" min="0" max="100" value="50" class="form-control">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Subject
+                    </button>
+                </form>
+                
+                <div class="motivation-card" style="margin-top: 2rem;">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Daily Motivation</h3>
+                    <p>"Success is the sum of small efforts repeated day in and day out."</p>
+                    <button class="btn btn-light">
+                        <i class="fas fa-volume-up"></i> Play Motivational Speech
+                    </button>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h4>Days Left</h4>
+                        <p>24</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-book"></i>
+                        <h4>Subjects</h4>
+                        <p>7</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Completion</h4>
+                        <p>42%</p>
+                    </div>
+                </div>
+                
+                <div class="timetable">
+                    <div class="timetable-header">
+                        <h3><i class="fas fa-calendar-week"></i> Your Study Schedule</h3>
+                        <div>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="days">
+                        <div class="day active">Today</div>
+                        <div class="day">Mon, 12 Jun</div>
+                        <div class="day">Tue, 13 Jun</div>
+                        <div class="day">Wed, 14 Jun</div>
+                        <div class="day">Thu, 15 Jun</div>
+                        <div class="day">Fri, 16 Jun</div>
+                        <div class="day">Sat, 17 Jun</div>
+                        <div class="day">Sun, 18 Jun</div>
+                    </div>
+                    
+                    <div class="schedule">
+                        <!-- High Priority -->
+                        <div class="time-block high-priority">
+                            <div class="time-block-header">
+                                <span class="time">08:00 - 10:00</span>
+                                <span class="priority high">High Priority</span>
+                            </div>
+                            <h4 class="subject">Advanced Calculus</h4>
+                            <p>Chapter 5: Differential Equations</p>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Understanding</span>
+                                    <span>42%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 42%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Medium Priority -->
+                        <div class="time-block medium-priority">
+                            <div class="time-block-header">
+                                <span class="time">11:00 - 12:30</span>
+                                <span class="priority medium">Medium Priority</span>
+                            </div>
+                            <h4 class="subject">Organic Chemistry</h4>
+                            <p>Reaction Mechanisms</p>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Understanding</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 65%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Low Priority -->
+                        <div class="time-block low-priority">
+                            <div class="time-block-header">
+                                <span class="time">14:00 - 15:00</span>
+                                <span class="priority low">Low Priority</span>
+                            </div>
+                            <h4 class="subject">History of Art</h4>
+                            <p>Renaissance Period</p>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Understanding</span>
+                                    <span>78%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 78%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Another High Priority -->
+                        <div class="time-block high-priority">
+                            <div class="time-block-header">
+                                <span class="time">16:00 - 18:30</span>
+                                <span class="priority high">High Priority</span>
+                            </div>
+                            <h4 class="subject">Quantum Physics</h4>
+                            <p>Wave-Particle Duality</p>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Understanding</span>
+                                    <span>35%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 35%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timetable">
+                    <div class="timetable-header">
+                        <h3><i class="fas fa-chart-pie"></i> Study Analytics</h3>
+                    </div>
+                    <div style="padding: 1rem; text-align: center;">
+                        <img src="https://via.placeholder.com/800x400?text=Priority+Distribution+Chart" alt="Priority Distribution" style="width: 100%; border-radius: 10px; margin-bottom: 1rem;">
+                        <img src="https://via.placeholder.com/800x400?text=Progress+Over+Time+Graph" alt="Progress Graph" style="width: 100%; border-radius: 10px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Simple frontend functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Day selection
+            const days = document.querySelectorAll('.day');
+            days.forEach(day => {
+                day.addEventListener('click', function() {
+                    days.forEach(d => d.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Priority indicator for form
+            const prioritySelect = document.querySelector('select');
+            prioritySelect.addEventListener('change', function() {
+                const indicator = this.parentElement.querySelector('.priority-indicator');
+                indicator.querySelectorAll('span').forEach(span => span.style.opacity = '0.3');
+                
+                if(this.value === 'high') {
+                    indicator.querySelector('.high').style.opacity = '1';
+                } else if(this.value === 'medium') {
+                    indicator.querySelector('.medium').style.opacity = '1';
+                } else {
+                    indicator.querySelector('.low').style.opacity = '1';
+                }
+            });
+            
+            // Trigger initial priority display
+            prioritySelect.dispatchEvent(new Event('change'));
+        });
+    </script>
+</body>
+</html>

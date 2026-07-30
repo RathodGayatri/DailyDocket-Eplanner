@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title>NoteMyDay - Notes App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1e1e2f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            min-height: 100vh;
+            width: 100vw;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 400px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            width: 100%;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-box {
+            width: 50%;
+            background: #2a2d3e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            background: #3a3f58;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        button {
+            background: #ff5e62;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #e04e52;
+        }
+
+        /* Updated styles for vertical display */
+        #notes {
+            display: block;
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        .note {
+            background: #2a2d3e;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .deleteNote {
+            background: #e04e52;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .clock {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: white;
+            background-color: #1f314b;
+            margin-left: 450px;
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: #f9e8e8;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #007bff !important;
+            /* Change color on hover */
+        }
+
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+            /* Slightly enlarge the icon on hover */
+        }
+
+        .nav-item.active .nav-link {
+            color: #007bff;
+            /* Highlight color for the active item */
+            background-color: #f0f8ff;
+
+            font-weight: bold;
+            /* Bold text for active item */
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s ease-in forwards;
+        }
+
+        /* Keyframes for fade-in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Delayed fade-in for smoother experience */
+        .fade-in-delay {
+            animation-delay: 1s;
+        }
+        .no-notes {
+    color: #aaa;
+    text-align: center;
+    margin-top: 20px;
+    font-style: italic;
+}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg " style="background-color: #1f314b;">
+        <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding:0.2px"-->
+        <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding: 5px 10px; min-height: 30px;">-->
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                    <a class="nav-link" aria-current="page" href="{% url 'userdash' %}">
+                        <i class="fas fa-home"></i> HOME
+                    </a>
+                    </li>
+
+                    <!-- <ul class="navbar-nav ms-auto"> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notice' %}">
+                            <i class="fas fa-bell"></i> REMAINDER
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fas fa-info-circle"></i> ABOUT
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> LOGOUT
+                        </a>
+                    </li>
+                </ul>
+                <h1 class="display-4 clock"></h1>
+                <script>
+                    setInterval(function () {
+                        var date = new Date();
+                        var hours = date.getHours().toString().padStart(2, '0');
+                        var minutes = date.getMinutes().toString().padStart(2, '0');
+                        var seconds = date.getSeconds().toString().padStart(2, '0');
+
+                        document.querySelector('.clock').innerText = hours + ':' + minutes + ':' + seconds;
+                    }, 1000);
+                </script>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid" style="background: #151f29;">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-2 col-xl-2 px-sm-2 px-0 " style="background-color: #1f314b;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-white min-vh-100">
+                    <a href="/"
+                        class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline"><I><b>E-Planner</b></I></span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                        id="menu">
+                        <li class="nav-item">
+                            <a href="{% url 'notemyday' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-home fs-4"></i> <span class="ms-1 d-none d-sm-inline">NoteMyDay</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'todo_list' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-tasks fs-4"></i> <span class="ms-1 d-none d-sm-inline">ToDo-List</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'expenditure' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-wallet fs-4"></i> <span
+                                    class="ms-1 d-none d-sm-inline">DailyExpenditure</span>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a href="{% url 'notice' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-bell fs-4"></i> <span class="ms-1 d-none d-sm-inline">Remainder and
+                                    Notifications</span>
+                            </a>
+                        </li> -->
+                        <!-- <li class="nav-item">
+                            <a href="{% url 'project_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-chart-line fs-4"></i> <span
+                                    class="ms-1 d-none d-sm-inline">ProjectTracker</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'exam_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Exam
+                                    Preparation</span>
+                            </a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a href="{% url 'quiz' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-question-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Daily
+                                    Quiz</span>
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="container">
+                <marquee scrollamount="12" i style="font-family: 'Poppins', sans-serif; color: white; font-size: 1.5em; font-weight: bold;"><i>Think.Plan.Execute.</i></marquee>
+                <!-- Note Input Form -->
+                <div class="input-box">
+                    {% csrf_token %}
+                    <input type="text" id="addTitle" placeholder="Title">
+                    <textarea id="addText" rows="4" placeholder="Take a note..."></textarea>
+                    <button id="addNote" type="button">Add Note</button>
+                </div>
+            
+                <!-- Notes Container -->
+                <div id="notes">
+                    {% for note in notes %}
+                    <div class="note" id="note-{{ note.id }}">
+                        <button class="deleteNote" onclick="deleteNote('{{ note.id }}')">X</button>
+                        <h3>{{ note.title|default:"Untitled" }}</h3>
+                        <p>{{ note.content }}</p>
+                        <small>{{ note.created_at|date:"M d, Y h:i A" }}</small>
+                    </div>
+                    {% empty %}
+                    <p class="no-notes">No notes available</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- JavaScript -->
+            <script>
+                // Get CSRF Token
+                function getCSRFToken() {
+                    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+                }
+            
+                // Function to add note to the page
+               
+// Function to add note to the page
+function addNoteToPage(noteData) {
+    const notesDiv = document.getElementById('notes');
+    
+    // Remove "no notes" message if it exists
+    const noNotesMsg = document.querySelector('.no-notes');
+    if (noNotesMsg) {
+        noNotesMsg.remove();
+    }
+    
+    const noteElement = document.createElement('div');
+    noteElement.className = 'note';
+    noteElement.id = `note-${noteData.id}`;
+    noteElement.innerHTML = `
+        <button class="deleteNote" onclick="deleteNote(${noteData.id})">X</button>
+        <h3>${noteData.title || 'Untitled'}</h3>
+        <p>${noteData.content}</p>
+        <small>${new Date(noteData.created_at).toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        })}</small>
+    `;
+    notesDiv.insertBefore(noteElement, notesDiv.firstChild);
+}
+            
+                // Add Note Function
+                async function addNote() {
+                    const title = document.getElementById('addTitle').value;
+                    const content = document.getElementById('addText').value;
+                    
+                    if (!content.trim()) {
+                        alert('Please enter note content');
+                        return;
+                    }
+            
+                    try {
+                        const response = await fetch('/add-note/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': getCSRFToken(),
+                            },
+                            body: JSON.stringify({
+                                title: title,
+                                content: content
+                            })
+                        });
+            
+                        // First check if the response is OK
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Server returned an error');
+                        }
+            
+                        const data = await response.json();
+                        
+                        if (data.success && data.note) {
+                            // Clear inputs
+                            document.getElementById('addTitle').value = '';
+                            document.getElementById('addText').value = '';
+                            
+                            // Add the new note to the page
+                            addNoteToPage(data.note);
+                        } else {
+                            throw new Error(data.error || 'Note was not returned in response');
+                        }
+                    } catch (error) {
+                        console.error('Add Note Error:', error);
+                        alert('Note was saved, but there was an issue displaying it. Refreshing...');
+                        window.location.reload(); // Refresh as fallback
+                    }
+                }
+            
+                // Initialize the button
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.getElementById('addNote').addEventListener('click', addNote);
+                });
+                // Function to delete a note
+// Function to delete a note
+async function deleteNote(noteId) {
+    try {
+        const response = await fetch(`/delete-note/${noteId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to delete note');
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            // Remove the note from the page
+            const noteElement = document.getElementById(`note-${noteId}`);
+            if (noteElement) {
+                noteElement.remove();
+            }
+            
+            // Show message if no notes left
+            if (document.querySelectorAll('.note').length === 0) {
+                const notesDiv = document.getElementById('notes');
+                notesDiv.innerHTML = '<p class="no-notes">No notes available</p>';
+            }
+        } else {
+            throw new Error(data.error || 'Note deletion failed');
+        }
+    } catch (error) {
+        console.error('Delete Note Error:', error);
+        alert('Error deleting note: ' + error.message);
+    }
+}         </script>
+</body>
+
+</html>

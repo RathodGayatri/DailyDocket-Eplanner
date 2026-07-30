@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1f314b;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            overflow-x: hidden;
+        }
+        h1 {
+            font-size: 36px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+        .clock {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: white;
+            background-color:  #1f314b;
+            margin-left: 600px;
+        }
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 5px auto;
+            padding: 20px;
+            background: #151f29;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-left: 0px;
+        }
+
+        /* Form Styles */
+        .project-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .project-form input, .project-form button {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .project-form input {
+            width: 100%;
+        }
+        .project-form button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .project-form button:hover {
+            background-color: #0056b3;
+        }
+        /* Project List */
+        .projects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .project-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease;
+            width: 45%;
+            
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .countdown {
+            font-size: 14px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ff5722;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .progress {
+            height: 15px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 15px;
+        }
+
+        /* Charts Section */
+        .charts-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .chart-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 45%;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+        .nav-link {
+            color: #f9e8e8;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #007bff !important; /* Change color on hover */
+        }
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+        .nav-link:hover i {
+            transform: scale(1.1); /* Slightly enlarge the icon on hover */
+        }
+        .nav-item.active .nav-link {
+            color: #007bff; /* Highlight color for the active item */
+            background-color: #f0f8ff; 
+            font-weight: bold; /* Bold text for active item */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg " style="background-color: #1f314b;">
+        <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding:0.2px"-->
+             <!--<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #150d3a; padding: 5px 10px; min-height: 30px;">-->
+
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                    <a class="nav-link" aria-current="page" href="{% url 'userdash' %}">
+                        <i class="fas fa-home"></i> HOME
+                    </a>
+                </li>
+            
+            <!-- <ul class="navbar-nav ms-auto"> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'notice' %}">
+                        <i class="fas fa-bell"></i> REMAINDER
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">
+                        <i class="fas fa-info-circle"></i> ABOUT
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                    </a>
+                </li>
+            </ul>
+                <h1 class="display-4 clock"></h1>
+                <script>
+                    setInterval(function() {
+                        var date = new Date();
+                        var hours = date.getHours().toString().padStart(2, '0');
+                        var minutes = date.getMinutes().toString().padStart(2, '0');
+                        var seconds = date.getSeconds().toString().padStart(2, '0');
+                        
+                        document.querySelector('.clock').innerText = hours + ':' + minutes + ':' + seconds;
+                    }, 1000);
+                </script>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid" style="background: #151f29;">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-2 col-xl-2 px-sm-2 px-0 " style="background-color: #1f314b;">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-1 text-white min-vh-100">
+                    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline"><I><b>E-Planner</b></I></span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="{% url 'notemyday' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-home fs-4"></i> <span class="ms-1 d-none d-sm-inline">NoteMyDay</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'todo_list' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-tasks fs-4"></i> <span class="ms-1 d-none d-sm-inline">ToDo-List</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'expenditure' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-wallet fs-4"></i> <span class="ms-1 d-none d-sm-inline">DailyExpenditure</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'notice' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-bell fs-4"></i> <span class="ms-1 d-none d-sm-inline">Remainder and Notifications</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'project_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-chart-line fs-4"></i> <span class="ms-1 d-none d-sm-inline">ProjectTracker</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'exam_tracker' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Exam Preparation</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'quiz' %}" class="nav-link align-middle px-0">
+                                <i class="fas fa-question-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Daily Quiz</span>
+                            </a>
+                        </li>                        
+                    </ul>
+                </div>
+            </div>
+ 
+    <div class="container" >
+        <marquee scrollamount="10" i style="font-family: 'Poppins', sans-serif; color: white; font-size: 1.5em; font-weight: bold;">Project Tracker</i></marquee>
+        
+        <!-- Project Input Form -->
+        <div class="project-form">
+            <input type="text" id="projectName" placeholder="Enter Project Name">
+            <input type="text" id="projectDescription" placeholder="Enter Project Description">
+            <input type="date" id="startDate">
+            <input type="date" id="endDate">
+            <input type="number" id="frontendCompleted" placeholder="Frontend Completed Days">
+            <input type="number" id="backendCompleted" placeholder="Backend Completed Days">
+            <input type="number" id="testingCompleted" placeholder="Testing Completed Days">
+            <button onclick="addProject()">Add Project</button>
+        </div>
+
+        <!-- Project List -->
+        <div class="projects" id="projects"></div>
+
+        <!-- Charts Section -->
+        <h2 style="color: white;">Project Analytics</h2>
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Project Progress</h3>
+                <canvas id="progressChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Task Completion</h3>
+                <canvas id="successChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+   
+    <script>
+        let projects = JSON.parse(localStorage.getItem('projects')) || [];
+        let progressChart, successChart;
+
+        function addProject() {
+            let name = document.getElementById("projectName").value;
+            let desc = document.getElementById("projectDescription").value;
+            let start = document.getElementById("startDate").value;
+            let end = document.getElementById("endDate").value;
+            let frontendCompleted = parseInt(document.getElementById("frontendCompleted").value);
+            let backendCompleted = parseInt(document.getElementById("backendCompleted").value);
+            let testingCompleted = parseInt(document.getElementById("testingCompleted").value);
+
+            if (name.trim() === "" || desc.trim() === "" || start === "" || end === "") {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            let projectDuration = calculateDaysBetween(start, end);
+            let frontendDays = Math.floor(projectDuration * 0.3);
+            let backendDays = Math.floor(projectDuration * 0.4);
+            let testingDays = projectDuration - frontendDays - backendDays;
+
+            let frontendStart = start;
+            let frontendEnd = addDaysToDate(frontendStart, frontendDays);
+
+            let backendStart = frontendEnd;
+            let backendEnd = addDaysToDate(backendStart, backendDays);
+
+            let testingStart = backendEnd;
+            let testingEnd = addDaysToDate(testingStart, testingDays);
+
+            let project = {
+                id: Date.now(),
+                name,
+                desc,
+                start,
+                end,
+                frontend: { start: frontendStart, end: frontendEnd, completed: frontendCompleted },
+                backend: { start: backendStart, end: backendEnd, completed: backendCompleted },
+                testing: { start: testingStart, end: testingEnd, completed: testingCompleted }
+            };
+
+            projects.push(project);
+            localStorage.setItem('projects', JSON.stringify(projects));
+            renderProjects();
+            updateCharts();
+        }
+
+        function renderProjects() {
+            let projectsDiv = document.getElementById("projects");
+            projectsDiv.innerHTML = "";
+
+            projects.forEach(project => {
+                let remainingDays = calculateDaysLeft(project.end);
+                let projectEl = document.createElement("div");
+                projectEl.className = "project-card";
+                projectEl.innerHTML = `
+                    <h3>${project.name}</h3>
+                    <span class="countdown">${remainingDays} days remaining</span>
+                    <p>${project.desc}</p>
+                    <p><strong>Start:</strong> ${project.start} | <strong>End:</strong> ${project.end}</p>
+                    <p><strong>Frontend Start:</strong> ${project.frontend.start} | <strong>Frontend End:</strong> ${project.frontend.end}</p>
+                    <p><strong>Backend Start:</strong> ${project.backend.start} | <strong>Backend End:</strong> ${project.backend.end}</p>
+                    <p><strong>Testing Start:</strong> ${project.testing.start} | <strong>Testing End:</strong> ${project.testing.end}</p>
+                    <p><strong>Frontend Completed:</strong> ${project.frontend.completed} days</p>
+                    <p><strong>Backend Completed:</strong> ${project.backend.completed} days</p>
+                    <p><strong>Testing Completed:</strong> ${project.testing.completed} days</p>
+                `;
+                projectsDiv.appendChild(projectEl);
+            });
+        }
+
+        function updateCharts() {
+            let projectNames = projects.map(project => project.name);
+            let frontendCompleted = projects.map(project => (project.frontend.completed / calculateDaysBetween(project.frontend.start, project.frontend.end)) * 100);
+            let backendCompleted = projects.map(project => (project.backend.completed / calculateDaysBetween(project.backend.start, project.backend.end)) * 100);
+            let testingCompleted = projects.map(project => (project.testing.completed / calculateDaysBetween(project.testing.start, project.testing.end)) * 100);
+
+            if (progressChart) progressChart.destroy();
+            if (successChart) successChart.destroy();
+
+            progressChart = new Chart(document.getElementById("progressChart"), {
+                type: 'bar',
+                data: {
+                    labels: projectNames,
+                    datasets: [{
+                        label: 'Frontend Progress (%)',
+                        data: frontendCompleted,
+                        backgroundColor: '#3498db',
+                        borderColor: '#2980b9',
+                        borderWidth: 1
+                    }, {
+                        label: 'Backend Progress (%)',
+                        data: backendCompleted,
+                        backgroundColor: '#e74c3c',
+                        borderColor: '#c0392b',
+                        borderWidth: 1
+                    }, {
+                        label: 'Testing Progress (%)',
+                        data: testingCompleted,
+                        backgroundColor: '#2ecc71',
+                        borderColor: '#27ae60',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            successChart = new Chart(document.getElementById("successChart"), {
+                type: 'pie',
+                data: {
+                    labels: ['Frontend', 'Backend', 'Testing'],
+                    datasets: [{
+                        label: 'Task Completion',
+                        data: [
+                            frontendCompleted.reduce((a, b) => a + b, 0),
+                            backendCompleted.reduce((a, b) => a + b, 0),
+                            testingCompleted.reduce((a, b) => a + b, 0)
+                        ],
+                        backgroundColor: ['#3498db', '#e74c3c', '#2ecc71'],
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        // Helper Functions
+        function calculateDaysBetween(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            return Math.floor((end - start) / (1000 * 60 * 60 * 24));
+        }
+
+        function addDaysToDate(date, days) {
+            const newDate = new Date(date);
+            newDate.setDate(newDate.getDate() + days);
+            return newDate.toISOString().split('T')[0];
+        }
+
+        function calculateDaysLeft(endDate) {
+            const end = new Date(endDate);
+            const now = new Date();
+            const difference = end - now;
+            return Math.floor(difference / (1000 * 60 * 60 * 24));
+        }
+
+        // Initialize the page with stored projects if any
+        renderProjects();
+        updateCharts();
+    </script>
+</body>
+</html>
