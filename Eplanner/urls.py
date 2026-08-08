@@ -5,6 +5,10 @@ from Eplanner import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # Homepage - opens Login page
+    path('', views.MyLogin, name='home'),
+
+    # Django Authentication
     path('accounts/', include('django.contrib.auth.urls')),
 
     # Authentication
@@ -41,14 +45,6 @@ urlpatterns = [
     path('delete-note/<int:note_id>/', views.delete_note, name='delete_note'),
 
     # Expense API
-    path(
-        'api/expenses/',
-        views.ExpenditureListCreate.as_view(),
-        name='expense-list'
-    ),
-    path(
-        'api/expenses/<int:pk>/',
-        views.ExpenditureDetail.as_view(),
-        name='expense-detail'
-    ),
+    path('api/expenses/', views.ExpenditureListCreate.as_view(), name='expense-list'),
+    path('api/expenses/<int:pk>/', views.ExpenditureDetail.as_view(), name='expense-detail'),
 ]
